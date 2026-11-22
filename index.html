@@ -406,6 +406,44 @@
             flex-wrap: wrap;
         }
 
+        
+/* Download Button */
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 26px;
+    flex-wrap: wrap;
+}
+
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 11px 24px;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(167, 139, 250, .35);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .25s ease;
+    box-shadow: 0 4px 18px rgba(139, 92, 246, .2);
+}
+
+.download-btn:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, .35);
+    color: #fff;
+}
+
+.download-btn .icon {
+    font-size: 17px;
+}
         /* Tree */
         .tree {
             font-family: 'JetBrains Mono', monospace;
@@ -560,6 +598,18 @@
                 <span class="badge badge-success">RTL Ready</span>
                 <span class="badge badge-warning">Zero Dependency</span>
             </div>
+            
+<div class="hero-actions">
+    <a
+        href="https://github.com/matri84/Atrim/releases/latest"
+        class="download-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        <span class="icon">↓</span>
+        دانلود آخرین نسخه Atrim
+    </a>
+</div>
         </section>
 
         <!-- Intro -->
