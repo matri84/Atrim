@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستندات فریمورک Atrim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b1020;
+            --bg-card: #12182b;
+            --bg-sidebar: #0e1424;
+            --border: #1e2a44;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --primary: #8b5cf6;
+            --primary-light: #a78bfa;
+            --primary-dark: #7c3aed;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --code-bg: #0a0f1a;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0,0,0,.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Vazirmatn', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            font-size: 15px;
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-left: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform .3s ease;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-sidebar);
+            z-index: 2;
+        }
+
+        .sidebar-header .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #fff;
+        }
+
+        .sidebar-header .logo span {
+            color: var(--primary-light);
+        }
+
+        .sidebar-header .version {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .nav {
+            padding: 16px 12px 40px;
+        }
+
+        .nav-section {
+            margin-bottom: 20px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 0 12px 8px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all .2s;
+        }
+
+        .nav a:hover {
+            background: rgba(139, 92, 246, .1);
+            color: var(--primary-light);
+        }
+
+        .nav a.active {
+            background: rgba(139, 92, 246, .15);
+            color: var(--primary-light);
+        }
+
+        .nav a .num {
+            font-size: 11px;
+            opacity: .6;
+            min-width: 18px;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            margin-right: 280px;
+            max-width: 920px;
+            padding: 40px 48px 100px;
+        }
+
+        /* Mobile toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 200;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 48px 0 16px;
+            color: #fff;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            scroll-margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 28px 0 12px;
+            color: var(--primary-light);
+        }
+
+        h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 20px 0 8px;
+            color: #c4b5fd;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: var(--text-muted);
+        }
+
+        ul, ol {
+            margin: 0 0 16px 20px;
+            color: var(--text-muted);
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        strong {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            background: rgba(139, 92, 246, .12);
+            color: var(--primary-light);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            margin: 18px 0;
+        }
+
+        .card.warning {
+            border-color: rgba(245, 158, 11, .35);
+            background: rgba(245, 158, 11, .06);
+        }
+
+        .card.success {
+            border-color: rgba(34, 197, 94, .3);
+            background: rgba(34, 197, 94, .05);
+        }
+
+        .card.info {
+            border-color: rgba(59, 130, 246, .3);
+            background: rgba(59, 130, 246, .05);
+        }
+
+        .card.danger {
+            border-color: rgba(239, 68, 68, .3);
+            background: rgba(239, 68, 68, .05);
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: rgba(255,255,255,.03);
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .code-header .lang {
+            font-weight: 500;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: inherit;
+            transition: all .2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(139, 92, 246, .15);
+            color: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        pre {
+            padding: 18px 20px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.65;
+            direction: ltr;
+            text-align: left;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e2e8f0;
+            font-size: 13px;
+        }
+
+        /* Tables */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: rgba(255,255,255,.04);
+            text-align: right;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(139, 92, 246, .04);
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-primary { background: rgba(139,92,246,.2); color: var(--primary-light); }
+        .badge-success { background: rgba(34,197,94,.15); color: #4ade80; }
+        .badge-warning { background: rgba(245,158,11,.15); color: #fbbf24; }
+        .badge-danger  { background: rgba(239,68,68,.15); color: #f87171; }
+        .badge-info    { background: rgba(59,130,246,.15); color: #60a5fa; }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 20px 0 40px;
+        }
+
+        .hero .logo-big {
+            font-size: 56px;
+            font-weight: 800;
+            letter-spacing: -3px;
+            margin-bottom: 8px;
+        }
+
+        .hero .logo-big span {
+            color: var(--primary-light);
+        }
+
+        .hero p {
+            font-size: 16px;
+            max-width: 520px;
+            margin: 0 auto 24px;
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Tree */
+        .tree {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            direction: ltr;
+            text-align: left;
+            line-height: 1.9;
+            color: var(--text-muted);
+            padding: 8px 0;
+        }
+
+        .tree .folder { color: var(--primary-light); }
+        .tree .file { color: #94a3b8; }
+        .tree .comment { color: #64748b; font-style: italic; }
+
+        /* Method list */
+        .method {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin: 14px 0;
+            overflow: hidden;
+        }
+
+        .method-header {
+            padding: 12px 18px;
+            background: rgba(255,255,255,.03);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .method-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--primary-light);
+            font-size: 14px;
+            direction: ltr;
+        }
+
+        .method-body {
+            padding: 14px 18px;
+        }
+
+        .method-body p {
+            margin-bottom: 8px;
+            font-size: 13.5px;
+        }
+
+        /* Footer */
+        .doc-footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-right: 0;
+                padding: 30px 20px 80px;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .hero .logo-big {
+                font-size: 42px;
+            }
+            h1 { font-size: 26px; }
+            h2 { font-size: 20px; }
+        }
+
+        /* Overlay for mobile */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 90;
+        }
+        .overlay.show { display: block; }
+    </style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle" aria-label="منو">☰</button>
+<div class="overlay" id="overlay"></div>
+
+<div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">Atrim<span>.</span></div>
+            <div class="version">مستندات نسخه ۱.۰</div>
+        </div>
+        <nav class="nav">
+            <div class="nav-section">
+                <div class="nav-section-title">شروع</div>
+                <a href="#intro"><span class="num">۱</span> معرفی</a>
+                <a href="#install"><span class="num">۲</span> نصب و راه‌اندازی</a>
+                <a href="#structure"><span class="num">۳</span> ساختار پروژه</a>
+                <a href="#config"><span class="num">۴</span> تنظیمات (.env)</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">هسته فریمورک</div>
+                <a href="#routing"><span class="num">۵</span> مسیریابی (Routing)</a>
+                <a href="#pages"><span class="num">۶</span> صفحات</a>
+                <a href="#helpers"><span class="num">۷</span> توابع کمکی</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">کلاس‌ها</div>
+                <a href="#db"><span class="num">۸</span> کلاس DB</a>
+                <a href="#vh"><span class="num">۹</span> کلاس VH (اعتبارسنجی)</a>
+                <a href="#sh"><span class="num">۱۰</span> کلاس SH (سشن)</a>
+                <a href="#fh"><span class="num">۱۱</span> کلاس FH (فایل)</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">پیشرفته</div>
+                <a href="#auth"><span class="num">۱۲</span> احراز هویت</a>
+                <a href="#upload"><span class="num">۱۳</span> آپلود فایل</a>
+                <a href="#rules"><span class="num">۱۴</span> قوانین و نکات</a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+        <!-- Hero -->
+        <section class="hero" id="intro">
+            <div class="logo-big">Atrim<span>.</span></div>
+            <p>یک فریم‌ورک سبک، ساده و قدرتمند PHP برای ساخت ایده‌های بزرگ — مخصوص توسعه‌دهندگان فارسی‌زبان</p>
+            <div class="hero-tags">
+                <span class="badge badge-primary">PHP 8+</span>
+                <span class="badge badge-info">PDO</span>
+                <span class="badge badge-success">RTL Ready</span>
+                <span class="badge badge-warning">Zero Dependency</span>
+            </div>
+        </section>
+
+        <!-- Intro -->
+        <section>
+            <h2>۱. معرفی</h2>
+            <p>
+                <strong>Atrim</strong> یک فریم‌ورک سبک و مینیمال PHP است که بدون وابستگی خارجی (Zero Dependency) طراحی شده.
+                هدف آن فراهم کردن ساختار تمیز، مسیریابی ساده، اعتبارسنجی قدرتمند، کار راحت با دیتابیس و سشن است
+                تا بتوانید سریع‌تر پروژه‌های وب خود را بسازید.
+            </p>
+            <div class="card info">
+                <div class="card-title">✨ ویژگی‌های کلیدی</div>
+                <ul>
+                    <li>نصب‌کننده تعاملی (Installer) که کل پروژه را از صفر می‌سازد</li>
+                    <li>سیستم Routing ساده با پشتیبانی از پارامترهای داینامیک</li>
+                    <li>کلاس اعتبارسنجی کامل (مشابه Laravel) با پیام‌های فارسی</li>
+                    <li>کلاس دیتابیس امن با PDO و متدهای آماده (CRUD + Pagination + Search)</li>
+                    <li>مدیریت سشن با قابلیت انقضا</li>
+                    <li>کمک‌کننده‌های فایل، URL، Redirect و Escape</li>
+                    <li>پشتیبانی کامل از RTL و زبان فارسی</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Install -->
+        <section id="install">
+            <h2>۲. نصب و راه‌اندازی</h2>
+            <p>برای ایجاد یک پروژه جدید، فایل <code>installer</code> را در ریشه وب‌سرور (مثلاً <code>htdocs</code> یا <code>www</code>) قرار دهید و از طریق ترمینال اجرا کنید:</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="lang">Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+                </div>
+                <pre><code>php installer</code></pre>
+            </div>
+
+            <p>بعد از اجرا، نصب‌کننده به ترتیب اطلاعات زیر را از شما می‌پرسد:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>سؤال</th>
+                            <th>مقدار پیش‌فرض</th>
+                            <th>توضیح</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Enter Project Name</td>
+                            <td><code>Atrim</code></td>
+                            <td>نام پوشه و پروژه (فقط حروف انگلیسی، عدد، خط تیره و زیرخط)</td>
+                        </tr>
+                        <tr>
+                            <td>Enter DataBase Host</td>
+                            <td><code>localhost</code></td>
+                            <td>آدرس سرور دیتابیس</td>
+                        </tr>
+                        <tr>
+                            <td>Enter DataBase Name</td>
+                            <td><code>test</code></td>
+                            <td>نام دیتابیس</td>
+                        </tr>
+                        <tr>
+                            <td>Enter DataBase Username</td>
+                            <td><code>root</code></td>
+                            <td>نام کاربری دیتابیس</td>
+                        </tr>
+                        <tr>
+                            <td>Enter DataBase Password</td>
+                            <td>(خالی)</td>
+                            <td>رمز عبور دیتابیس</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card warning">
+                <div class="card-title">⚠ نکات مهم هنگام نصب</div>
+                <ul>
+                    <li>تا زمانی که پیام موفقیت نمایش داده نشده، ترمینال را نبندید و <code>Ctrl + C</code> نزنید.</li>
+                    <li>نام پروژه نمی‌تواند خالی باشد و فقط کاراکترهای مجاز (<code>a-z A-Z 0-9 _ -</code>) را می‌پذیرد.</li>
+                    <li>اگر پوشه‌ای با همان نام از قبل وجود داشته باشد، نصب متوقف می‌شود.</li>
+                    <li>بعد از نصب، فایل <code>.env</code> را بررسی و در صورت نیاز ویرایش کنید.</li>
+                </ul>
+            </div>
+
+            <h3>اجرای پروژه</h3>
+            <p>پس از نصب موفق، پروژه در پوشه‌ای با نام انتخابی شما ساخته می‌شود. کافی است به آدرس زیر در مرورگر بروید:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="lang">URL</span>
+                </div>
+                <pre><code>http://127.0.0.1/نام-پروژه</code></pre>
+            </div>
+            <p>صفحه خوش‌آمدگویی Atrim را خواهید دید.</p>
+        </section>
+
+        <!-- Structure -->
+        <section id="structure">
+            <h2>۳. ساختار پروژه</h2>
+            <p>بعد از اجرای نصب‌کننده، ساختار زیر ایجاد می‌شود:</p>
+
+            <div class="card">
+                <div class="tree">
+<span class="folder">نام-پروژه/</span>
+├── <span class="file">index.php</span>              <span class="comment"># نقطه ورود اصلی</span>
+├── <span class="file">.htaccess</span>              <span class="comment"># بازنویسی URL به index.php</span>
+├── <span class="file">.env</span>                   <span class="comment"># تنظیمات محیطی</span>
+├── <span class="folder">Assets/</span>                <span class="comment"># فایل‌های استاتیک و آپلودها</span>
+├── <span class="folder">Pages/</span>
+│   ├── <span class="file">header.php</span>         <span class="comment"># هدر مشترک صفحات</span>
+│   ├── <span class="file">footer.php</span>         <span class="comment"># فوتر مشترک صفحات</span>
+│   └── <span class="file">home.atrim.php</span>     <span class="comment"># صفحه اصلی</span>
+└── <span class="folder">Core/</span>
+    ├── <span class="file">core.php</span>             <span class="comment"># بارگذاری تمام اجزا</span>
+    ├── <span class="folder">Config/</span>
+    │   ├── <span class="file">config.php</span>     <span class="comment"># خواندن .env و شروع سشن</span>
+    │   └── <span class="file">message.php</span>    <span class="comment"># پیام‌های اعتبارسنجی فارسی</span>
+    ├── <span class="folder">Connection/</span>
+    │   └── <span class="file">connection.php</span> <span class="comment"># اتصال PDO</span>
+    ├── <span class="folder">Routes/</span>
+    │   └── <span class="file">route.php</span>      <span class="comment"># تعریف مسیرها</span>
+    ├── <span class="folder">Functions/</span>
+    │   └── <span class="file">functions.php</span>  <span class="comment"># توابع کمکی و Router</span>
+    └── <span class="folder">Classes/</span>
+        ├── <span class="file">DB.atrim.php</span>     <span class="comment"># کلاس دیتابیس</span>
+        ├── <span class="file">VH.atrim.php</span>     <span class="comment"># کلاس اعتبارسنجی</span>
+        ├── <span class="file">SH.atrim.php</span>     <span class="comment"># کلاس سشن</span>
+        └── <span class="file">FH.atrim.php</span>     <span class="comment"># کلاس فایل</span>
+                </div>
+            </div>
+
+            <div class="card info">
+                <div class="card-title">📌 نکته درباره پسوند .atrim.php</div>
+                <p>صفحات محتوایی با پسوند <code>.atrim.php</code> ساخته می‌شوند. این کار برای جدا کردن صفحات از فایل‌های سیستمی انجام شده است. هنگام تعریف مسیر فقط نام صفحه (بدون پسوند) را بنویسید.</p>
+            </div>
+        </section>
+
+        <!-- Config -->
+        <section id="config">
+            <h2>۴. تنظیمات (.env)</h2>
+            <p>تمام تنظیمات اصلی پروژه در فایل <code>.env</code> قرار دارد. این فایل بعد از نصب به‌صورت خودکار ساخته می‌شود:</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="lang">.env</span>
+                    <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+                </div>
+                <pre><code>#App Name:
+APP_NAME="Atrim"
+VERSION=1.0.0
+APP_URL=http://127.0.0.1/Atrim
+
+# DataBase:
+DB=mysql
+DB_HOST=localhost
+DB_NAME=test
+DB_USERNAME=root
+DB_PASSWORD=""
+DB_PORT=3306
+DB_CHARSET=utf8mb4
+
+#SESSION:
+EXPIRE_TIME=60
+LOGIN_EXPIRE_TIME=2592000
+
+#PAGINATION:
+POST_PERPAGE = 6;</code></pre>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>کلید</th>
+                            <th>توضیح</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>APP_NAME</code></td>
+                            <td>نام اپلیکیشن</td>
+                        </tr>
+                        <tr>
+                            <td><code>APP_URL</code></td>
+                            <td>آدرس پایه پروژه (برای تولید لینک‌ها ضروری است)</td>
+                        </tr>
+                        <tr>
+                            <td><code>DB_*</code></td>
+                            <td>اطلاعات اتصال به دیتابیس MySQL</td>
+                        </tr>
+                        <tr>
+                            <td><code>EXPIRE_TIME</code></td>
+                            <td>زمان انقضای سشن معمولی (ثانیه) — پیش‌فرض ۶۰ ثانیه</td>
+                        </tr>
+                        <tr>
+                            <td><code>LOGIN_EXPIRE_TIME</code></td>
+                            <td>زمان انقضای سشن لاگین (ثانیه) — پیش‌فرض ۳۰ روز</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST_PERPAGE</code></td>
+                            <td>تعداد آیتم در هر صفحه برای متد <code>paginate</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card danger">
+                <div class="card-title">🔒 امنیت</div>
+                <p>فایل <code>.env</code> حاوی اطلاعات حساس است. مطمئن شوید که از طریق وب قابل دسترسی نیست (معمولاً با <code>.htaccess</code> محافظت می‌شود یا خارج از public قرار می‌گیرد).</p>
+            </div>
+        </section>
+
+        <!-- Routing -->
+        <section id="routing">
+            <h2>۵. مسیریابی (Routing)</h2>
+            <p>مسیرها در فایل <code>Core/Routes/route.php</code> تعریف می‌شوند. ساختار ساده است:</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="lang">Core/Routes/route.php</span>
+                    <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+                </div>
+                <pre><code>&lt;?php
+
+$routes = [
+    "/"           =&gt; "home",
+    "/about"      =&gt; "about",
+    "/post/:id"   =&gt; "post",
+    "/user/:username/posts" =&gt; "user-posts",
+];</code></pre>
+            </div>
+
+            <h3>پارامترهای داینامیک</h3>
+            <p>با استفاده از <code>:نام</code> می‌توانید پارامترهای متغیر تعریف کنید. این پارامترها به‌صورت خودکار در صفحه استخراج می‌شوند:</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="lang">Pages/post.atrim.php</span>
+                    <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+                </div>
+                <pre><code>&lt;?php
+// اگر مسیر /post/:id باشد و کاربر به /post/42 برود
+// متغیر $id به‌صورت خودکار در دسترس است
+echo "شناسه پست: " . e($id);</code></pre>
+            </div>
+
+            <div class="card success">
+                <div class="card-title">✓ قوانین مسیریابی</div>
+                <ul>
+                    <li>کلید آرایه = مسیر URL</li>
+                    <li>مقدار آرایه = نام فایل صفحه بدون پسوند <code>.atrim.php</code></li>
+                    <li>اگر صفحه‌ای پیدا نشود، کد ۴۰۴ برگردانده می‌شود</li>
+                    <li>می‌توانید فایل <code>Pages/404.atrim.php</code> بسازید تا صفحه ۴۰۴ سفارشی نمایش داده شود</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Pages -->
+        <section id="pages">
+            <h2>۶. صفحات</h2>
+            <p>هر صفحه در پوشه <code>Pages/</code> با پسوند <code>.atrim.php</code> قرار می‌گیرد.</p>
+
+            <h3>ایجاد صفحه جدید</h3>
+            <ol>
+                <li>فایل جدید بسازید: مثلاً <code>Pages/about.atrim.php</code></li>
+                <li>مسیر را در <code>route.php</code> اضافه کنید: <code>"/about" => "about"</code></li>
+                <li>محتوای HTML یا PHP خود را داخل فایل بنویسید</li>
+            </ol>
+
+            <h3>هدر و فوتر مشترک</h3>
+            <p>فایل‌های <code>header.php</code> و <code>footer.php</code> در هر درخواست به‌صورت خودکار قبل و بعد از صفحه لود می‌شوند (توسط <code>getHeader()</code> و <code>getFooter()</code> در <code>index.php</code>).</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="lang">index.php</span>
+                </div>
+                <pre><code>&lt;?php
+require __DIR__ . "/./Core/core.php";
+
+getHeader();
+Router();
+getFooter();</code></pre>
+            </div>
+        </section>
+
+        <!-- Helpers -->
+        <section id="helpers">
+            <h2>۷. توابع کمکی (Helpers)</h2>
+            <p>این توابع در <code>Core/Functions/functions.php</code> تعریف شده‌اند و در تمام صفحات در دسترس هستند.</p>
+
+            <!-- url -->
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">url(string $path = "/")</span>
+                    <span class="badge badge-info">string</span>
+                </div>
+                <div class="method-body">
+                    <p>آدرس کامل بر اساس <code>APP_URL</code> می‌سازد.</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>echo url("/about");          // http://127.0.0.1/Atrim/about
+echo url("posts/5");         // http://127.0.0.1/Atrim/posts/5</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assets -->
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">Assets(string $path)</span>
+                    <span class="badge badge-info">void (echo)</span>
+                </div>
+                <div class="method-body">
+                    <p>آدرس فایل‌های داخل پوشه <code>Assets</code> را چاپ می‌کند.</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>&lt;img src="&lt;?php Assets('images/logo.png'); ?&gt;" alt="لوگو"&gt;
+&lt;link rel="stylesheet" href="&lt;?php Assets('css/style.css'); ?&gt;"&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- go -->
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">go(string $path = "/")</span>
+                    <span class="badge badge-warning">redirect + exit</span>
+                </div>
+                <div class="method-body">
+                    <p>کاربر را به مسیر مورد نظر هدایت می‌کند و اسکریپت را متوقف می‌کند.</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>go("/login");
+go("dashboard");</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- e -->
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">e(mixed $value)</span>
+                    <span class="badge badge-success">string (escaped)</span>
+                </div>
+                <div class="method-body">
+                    <p>برای جلوگیری از XSS، خروجی را با <code>htmlspecialchars</code> امن می‌کند. <strong>همیشه</strong> از این تابع برای نمایش داده‌های کاربر استفاده کنید.</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>echo e($user['name']);
+&lt;title&gt;&lt;?= e($pageTitle) ?&gt;&lt;/title&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- input & old -->
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">input(?string $key, mixed $default, string $method)</span>
+                    <span class="badge badge-info">mixed</span>
+                </div>
+                <div class="method-body">
+                    <p>خواندن داده از <code>$_POST</code> / <code>$_GET</code> / <code>$_REQUEST</code>.</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>$email = input('email');                    // از POST
+$name  = input('name', 'مهمان', 'GET');     // از GET با مقدار پیش‌فرض
+$all   = input();                           // کل آرایه POST</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">old(string $key, mixed $default, string $method)</span>
+                    <span class="badge badge-info">mixed</span>
+                </div>
+                <div class="method-body">
+                    <p>برای پر کردن مجدد فرم بعد از خطای اعتبارسنجی (مشابه Laravel old).</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>&lt;input type="text" name="email" value="&lt;?= e(old('email')) ?&gt;"&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- isLogin, mustLogin, logOut -->
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">isLogin() · mustLogin() · logOut()</span>
+                </div>
+                <div class="method-body">
+                    <p>توابع مرتبط با وضعیت لاگین کاربر:</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>if (isLogin()) {
+    echo "خوش آمدید";
+}
+
+mustLogin("/login");   // اگر لاگین نباشد به /login می‌رود
+
+logOut();              // خروج و هدایت به صفحه اصلی</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- J2A A2J -->
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">J2A(string $json) · A2J(mixed $value)</span>
+                </div>
+                <div class="method-body">
+                    <p>تبدیل JSON به آبجکت/آرایه و برعکس (با پشتیبانی از یونیکد).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DB Class -->
+        <section id="db">
+            <h2>۸. کلاس DB (دیتابیس)</h2>
+            <p>کلاس <code>\Core\Classes\DB</code> تمام عملیات دیتابیس را به‌صورت امن با PDO انجام می‌دهد. نام جداول و ستون‌ها اعتبارسنجی می‌شوند تا از SQL Injection جلوگیری شود.</p>
+
+            <h3>insert</h3>
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">DB::insert(string $table, array $data)</span>
+                </div>
+                <div class="method-body">
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>use Core\Classes\DB;
+
+DB::insert('users', [
+    'name'  =&gt; 'محمد',
+    'email' =&gt; 'test@example.com',
+    'age'   =&gt; 25
+]);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>get</h3>
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">DB::get(string $table, bool $single = false, array $where = [], array $columns = ['*'])</span>
+                </div>
+                <div class="method-body">
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>// همه کاربران
+$users = DB::get('users');
+
+// یک کاربر با شرط
+$user = DB::get('users', true, ['id' =&gt; 5]);
+
+// فقط ستون‌های خاص
+$names = DB::get('users', false, [], ['id', 'name']);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>update</h3>
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">DB::update(string $table, array $where, array $data)</span>
+                </div>
+                <div class="method-body">
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>DB::update('users', ['id' =&gt; 5], [
+    'name' =&gt; 'علی',
+    'age'  =&gt; 30
+]);</code></pre>
+                    </div>
+                    <div class="card danger">
+                        <div class="card-title">⚠ اجباری بودن شرط</div>
+                        <p>آپدیت بدون شرط (<code>$where</code> خالی) مجاز نیست و Exception پرتاب می‌کند.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>delete</h3>
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">DB::delete(string $table, array $where)</span>
+                </div>
+                <div class="method-body">
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>DB::delete('users', ['id' =&gt; 5]);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>paginate</h3>
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">DB::paginate(string $table, int $page = 1, array $where = [], array $columns = ['*'])</span>
+                </div>
+                <div class="method-body">
+                    <p>صفحه بندی خودکار بر اساس مقدار <code>POST_PERPAGE</code> در فایل <code>.env</code>.</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>$result = DB::paginate('posts', 2);
+
+// خروجی:
+// [
+//   'data' =&gt; [...],
+//   'meta' =&gt; [
+//      'total' =&gt; 45,
+//      'per_page' =&gt; 6,
+//      'current_page' =&gt; 2,
+//      'last_page' =&gt; 8
+//   ]
+// ]</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>search</h3>
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">DB::search(string $table, string $keyword, array $columns, array $where = [], int $limit = 10)</span>
+                </div>
+                <div class="method-body">
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>$results = DB::search('posts', 'php', ['title', 'body'], ['status' =&gt; 'published'], 20);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>register و login</h3>
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">DB::register() · DB::login()</span>
+                </div>
+                <div class="method-body">
+                    <p>متدهای آماده برای ثبت‌نام و ورود با هش امن رمز عبور (<code>password_hash</code> / <code>password_verify</code>).</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>// ثبت‌نام
+DB::register('users', 'user@email.com', 'Secret123!', [
+    'name' =&gt; 'محمد'
+]);
+
+// ورود
+if (DB::login('users', 'user@email.com', 'Secret123!')) {
+    go('/dashboard');
+} else {
+    echo 'ایمیل یا رمز اشتباه است';
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VH Class -->
+        <section id="vh">
+            <h2>۹. کلاس VH (اعتبارسنجی)</h2>
+            <p>کلاس <code>\Core\Classes\VH</code> یک سیستم اعتبارسنجی کامل شبیه Laravel است که پیام‌های خطا را به فارسی برمی‌گرداند.</p>
+
+            <h3>نحوه استفاده</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="lang">مثال کامل</span>
+                    <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+                </div>
+                <pre><code>use Core\Classes\VH;
+
+$ok = VH::validation($_POST, [
+    'name'     =&gt; 'required|string|min:3|max:50|persian',
+    'email'    =&gt; 'required|email',
+    'mobile'   =&gt; 'required|mobile',
+    'password' =&gt; 'required|password:8',
+    'age'      =&gt; 'nullable|integer|min:18|max:100',
+], [], [
+    'name'     =&gt; 'نام',
+    'email'    =&gt; 'ایمیل',
+    'mobile'   =&gt; 'موبایل',
+    'password' =&gt; 'رمز عبور',
+    'age'      =&gt; 'سن',
+]);
+
+if (VH::fails()) {
+    // نمایش خطاها
+    foreach (VH::$message as $field =&gt; $errors) {
+        foreach ($errors as $error) {
+            echo "&lt;p&gt;" . e($error) . "&lt;/p&gt;";
+        }
+    }
+} else {
+    // داده‌ها معتبر هستند
+}</code></pre>
+            </div>
+
+            <h3>قوانین موجود (Rules)</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>قانون</th>
+                            <th>توضیح</th>
+                            <th>مثال</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>required</code></td><td>الزامی بودن فیلد</td><td><code>required</code></td></tr>
+                        <tr><td><code>nullable</code></td><td>اجازه خالی بودن</td><td><code>nullable</code></td></tr>
+                        <tr><td><code>string</code></td><td>باید رشته باشد</td><td><code>string</code></td></tr>
+                        <tr><td><code>numeric</code> / <code>integer</code></td><td>عدد / عدد صحیح</td><td><code>integer</code></td></tr>
+                        <tr><td><code>boolean</code></td><td>درست یا نادرست</td><td><code>boolean</code></td></tr>
+                        <tr><td><code>email</code></td><td>ایمیل معتبر</td><td><code>email</code></td></tr>
+                        <tr><td><code>url</code></td><td>آدرس اینترنتی</td><td><code>url</code></td></tr>
+                        <tr><td><code>min</code> / <code>max</code> / <code>between</code></td><td>حداقل / حداکثر / بازه</td><td><code>min:3</code> یا <code>between:5,20</code></td></tr>
+                        <tr><td><code>size</code></td><td>طول دقیق</td><td><code>size:10</code></td></tr>
+                        <tr><td><code>digits</code></td><td>تعداد رقم دقیق</td><td><code>digits:10</code></td></tr>
+                        <tr><td><code>same</code> / <code>confirmed</code></td><td>یکسان بودن با فیلد دیگر</td><td><code>same:password</code></td></tr>
+                        <tr><td><code>in</code> / <code>not_in</code></td><td>مقادیر مجاز / غیرمجاز</td><td><code>in:male,female</code></td></tr>
+                        <tr><td><code>regex</code> / <code>not_regex</code></td><td>الگوی منظم</td><td><code>regex:/^[a-z]+$/</code></td></tr>
+                        <tr><td><code>english</code></td><td>فقط حروف انگلیسی</td><td><code>english</code></td></tr>
+                        <tr><td><code>persian</code></td><td>فقط حروف فارسی</td><td><code>persian</code></td></tr>
+                        <tr><td><code>alpha_num</code> / <code>alpha_dash</code></td><td>حروف+عدد / حروف+عدد+خط</td><td><code>alpha_dash</code></td></tr>
+                        <tr><td><code>mobile</code></td><td>موبایل ایرانی (09xxxxxxxxx)</td><td><code>mobile</code></td></tr>
+                        <tr><td><code>national_code</code></td><td>کد ملی معتبر</td><td><code>national_code</code></td></tr>
+                        <tr><td><code>password</code></td><td>رمز قوی (حرف بزرگ+کوچک+عدد+نماد)</td><td><code>password:8</code></td></tr>
+                        <tr><td><code>bail</code></td><td>توقف بعد از اولین خطا</td><td><code>bail|required|email</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SH Class -->
+        <section id="sh">
+            <h2>۱۰. کلاس SH (سشن)</h2>
+            <p>کلاس <code>\Core\Classes\SH</code> مدیریت سشن را ساده می‌کند.</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>متد</th>
+                            <th>توضیح</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>SH::make($name, $value)</code></td>
+                            <td>ایجاد سشن (فقط اگر از قبل وجود نداشته باشد)</td>
+                        </tr>
+                        <tr>
+                            <td><code>SH::show($name)</code></td>
+                            <td>خواندن مقدار سشن</td>
+                        </tr>
+                        <tr>
+                            <td><code>SH::has($name)</code></td>
+                            <td>بررسی وجود سشن</td>
+                        </tr>
+                        <tr>
+                            <td><code>SH::delete($name)</code></td>
+                            <td>حذف سشن</td>
+                        </tr>
+                        <tr>
+                            <td><code>SH::flash($name)</code></td>
+                            <td>خواندن و بلافاصله حذف (برای پیام‌های یک‌بار مصرف)</td>
+                        </tr>
+                        <tr>
+                            <td><code>SH::ex($name, $login)</code></td>
+                            <td>بررسی و اعمال انقضای زمانی سشن</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header"><span class="lang">مثال</span></div>
+                <pre><code>use Core\Classes\SH;
+
+SH::make('flash_message', 'عملیات با موفقیت انجام شد');
+echo SH::flash('flash_message');   // نمایش و حذف</code></pre>
+            </div>
+        </section>
+
+        <!-- FH Class -->
+        <section id="fh">
+            <h2>۱۱. کلاس FH (مدیریت فایل)</h2>
+            <p>کلاس <code>\Core\Classes\FH</code> برای کار با فایل‌های داخل پوشه <code>Assets</code> طراحی شده است.</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>متد</th>
+                            <th>توضیح</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>FH::exists($path)</code></td><td>بررسی وجود فایل</td></tr>
+                        <tr><td><code>FH::read($path)</code></td><td>خواندن محتوای فایل</td></tr>
+                        <tr><td><code>FH::write($path, $content)</code></td><td>نوشتن در فایل</td></tr>
+                        <tr><td><code>FH::append($path, $content)</code></td><td>افزودن به انتهای فایل</td></tr>
+                        <tr><td><code>FH::delete($path)</code></td><td>حذف فایل</td></tr>
+                        <tr><td><code>FH::extension($path)</code></td><td>پسوند فایل</td></tr>
+                        <tr><td><code>FH::name($path)</code></td><td>نام فایل</td></tr>
+                        <tr><td><code>FH::readJson($path)</code></td><td>خواندن فایل JSON به‌صورت آرایه</td></tr>
+                        <tr><td><code>FH::writeJson($path, $data)</code></td><td>نوشتن آرایه به‌صورت JSON</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card info">
+                <div class="card-title">📌 مسیر پایه</div>
+                <p>تمام مسیرها نسبت به پوشه <code>Assets/</code> در نظر گرفته می‌شوند. مثلاً <code>FH::read('data/config.json')</code> معادل <code>Assets/data/config.json</code> است.</p>
+            </div>
+        </section>
+
+        <!-- Auth -->
+        <section id="auth">
+            <h2>۱۲. احراز هویت</h2>
+            <p>فریمورک سیستم لاگین آماده‌ای دارد که با ترکیب کلاس‌های DB و SH کار می‌کند.</p>
+
+            <h3>ثبت‌نام</h3>
+            <div class="code-block">
+                <div class="code-header"><span class="lang">مثال</span></div>
+                <pre><code>try {
+    DB::register('users', input('email'), input('password'), [
+        'name' =&gt; input('name')
+    ]);
+    go('/login');
+} catch (InvalidArgumentException $e) {
+    echo e($e-&gt;getMessage());  // مثلاً: این ایمیل قبلاً ثبت شده است
+}</code></pre>
+            </div>
+
+            <h3>ورود</h3>
+            <div class="code-block">
+                <div class="code-header"><span class="lang">مثال</span></div>
+                <pre><code>if (DB::login('users', input('email'), input('password'))) {
+    go('/dashboard');
+} else {
+    echo 'اطلاعات ورود نادرست است';
+}</code></pre>
+            </div>
+
+            <h3>محافظت از صفحات</h3>
+            <div class="code-block">
+                <div class="code-header"><span class="lang">در ابتدای صفحه محافظت‌شده</span></div>
+                <pre><code>mustLogin('/login');   // اگر لاگین نباشد ریدایرکت می‌شود
+
+$user = \Core\Classes\SH::show('user');
+echo 'سلام ' . e($user['name']);</code></pre>
+            </div>
+        </section>
+
+        <!-- Upload -->
+        <section id="upload">
+            <h2>۱۳. آپلود فایل</h2>
+            <p>متد <code>DB::upload</code> برای آپلود امن فایل‌ها طراحی شده است.</p>
+
+            <div class="method">
+                <div class="method-header">
+                    <span class="method-name">DB::upload(array $file, string $path = '', array $allowed = [...], int $maxSize = 2097152)</span>
+                </div>
+                <div class="method-body">
+                    <ul>
+                        <li><strong>$file</strong>: آرایه فایل از <code>$_FILES['field']</code></li>
+                        <li><strong>$path</strong>: زیرپوشه داخل Assets (مثلاً <code>images/avatars</code>)</li>
+                        <li><strong>$allowed</strong>: پسوندهای مجاز (پیش‌فرض: jpg, jpeg, png, webp, pdf)</li>
+                        <li><strong>$maxSize</strong>: حداکثر حجم به بایت (پیش‌فرض ۲ مگابایت)</li>
+                    </ul>
+                    <div class="code-block">
+                        <div class="code-header"><span class="lang">مثال</span></div>
+                        <pre><code>try {
+    $url = DB::upload($_FILES['avatar'], 'avatars', ['jpg', 'png', 'webp'], 1048576);
+    // $url = آدرس کامل فایل آپلود شده
+    echo $url;
+} catch (Exception $e) {
+    echo e($e-&gt;getMessage());
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rules -->
+        <section id="rules">
+            <h2>۱۴. قوانین و نکات مهم</h2>
+
+            <div class="card success">
+                <div class="card-title">✅ بایدها</div>
+                <ul>
+                    <li>همیشه از تابع <code>e()</code> برای نمایش داده‌های کاربر استفاده کنید.</li>
+                    <li>قبل از هر عملیات دیتابیس، اعتبارسنجی را با VH انجام دهید.</li>
+                    <li>صفحات محافظت‌شده را با <code>mustLogin()</code> شروع کنید.</li>
+                    <li>مقدار <code>APP_URL</code> را در <code>.env</code> دقیقاً مطابق آدرس واقعی پروژه تنظیم کنید.</li>
+                    <li>برای پارامترهای مسیر از نام‌های معنادار استفاده کنید (<code>:id</code>، <code>:slug</code> و ...).</li>
+                </ul>
+            </div>
+
+            <div class="card danger">
+                <div class="card-title">❌ نبایدها</div>
+                <ul>
+                    <li>هرگز داده خام کاربر را بدون <code>e()</code> چاپ نکنید.</li>
+                    <li>آپدیت یا حذف بدون شرط انجام ندهید (فریمورک خودش جلویش را می‌گیرد).</li>
+                    <li>فایل <code>.env</code> را در گیت‌هاب یا مکان عمومی قرار ندهید.</li>
+                    <li>از نام‌های غیرمجاز برای پروژه (فاصله، کاراکتر خاص) استفاده نکنید.</li>
+                </ul>
+            </div>
+
+            <h3>جریان درخواست (Request Lifecycle)</h3>
+            <ol>
+                <li>درخواست به <code>index.php</code> می‌رسد (از طریق <code>.htaccess</code>)</li>
+                <li><code>core.php</code> تمام فایل‌های Config، Routes، Classes و Functions را لود می‌کند</li>
+                <li>اتصال دیتابیس برقرار و به کلاس DB تزریق می‌شود</li>
+                <li>سشن لاگین در صورت وجود بررسی و تمدید می‌شود</li>
+                <li><code>getHeader()</code> هدر را لود می‌کند</li>
+                <li><code>Router()</code> مسیر را پیدا کرده و صفحه مربوطه را اجرا می‌کند</li>
+                <li><code>getFooter()</code> فوتر را لود می‌کند</li>
+            </ol>
+        </section>
+
+        <div class="doc-footer">
+            <p>مستندات فریمورک <strong>Atrim</strong> — نسخه ۱.۰</p>
+            <p style="margin-top:6px; opacity:.7;">ساخته شده برای توسعه‌دهندگان</p>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Mobile menu
+    const toggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('show');
+    });
+
+    overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+    });
+
+    // Active link on scroll
+    const sections = document.querySelectorAll('section[id], .hero');
+    const navLinks = document.querySelectorAll('.nav a');
+
+    function setActiveLink() {
+        let current = '';
+        sections.forEach(section => {
+            const top = section.offsetTop - 100;
+            if (scrollY >= top) {
+                current = section.getAttribute('id') || 'intro';
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', setActiveLink);
+    setActiveLink();
+
+    // Close mobile menu on link click
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+    });
+
+    // Copy code
+    function copyCode(btn) {
+        const pre = btn.closest('.code-block').querySelector('pre code');
+        const text = pre.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            btn.textContent = 'کپی شد ✓';
+            setTimeout(() => btn.textContent = 'کپی', 1800);
+        });
+    }
+</script>
+</body>
+</html>
